@@ -276,7 +276,7 @@ class PineconeDataStore(DataStore):
         # For fields that are dates, convert them to unix timestamps
         for field, value in metadata.dict().items():
             if value is not None:
-                if field in ["originalCreatedTime, originalModifiedTime"]:
+                if field in ["originalCreatedTime", "originalModifiedTime"]:
                     pinecone_metadata[field] = to_unix_timestamp(value)
                 else:
                     pinecone_metadata[field] = value
