@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional, Tuple
 import uuid
 from models.models import Document, DocumentChunk, DocumentChunkMetadata
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 import tiktoken
 
@@ -12,7 +13,7 @@ tokenizer = tiktoken.get_encoding(
 )  # The encoding scheme to use for tokenization
 
 # Constants
-CHUNK_SIZE = 1000  # The target size of each text chunk in tokens
+CHUNK_SIZE = 2000  # The target size of each text chunk in tokens
 MIN_CHUNK_SIZE_CHARS = 350  # The minimum size of each text chunk in characters
 MIN_CHUNK_LENGTH_TO_EMBED = 5  # Discard chunks shorter than this
 EMBEDDINGS_BATCH_SIZE = 128  # The number of embeddings to request at a time
@@ -30,6 +31,14 @@ def get_text_chunks(text: str, chunk_token_size: Optional[int]) -> List[str]:
     Returns:
         A list of text chunks, each of which is a string of ~CHUNK_SIZE tokens.
     """
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200, separator=["", "\n\n", "\n", " ", ""])
+    chunks = text_splitter.split_text(text)
+    return chunks
+
+    '''
+    TODO: This piece of code is native splitter mechanism for chatgpt-retrieval-plugin, we realised that langchains splitter works better for our use case. This can be removed.
+
     # Return an empty list if the text is empty or whitespace
     if not text or text.isspace():
         return []
@@ -94,7 +103,7 @@ def get_text_chunks(text: str, chunk_token_size: Optional[int]) -> List[str]:
             chunks.append(remaining_text)
 
     return chunks
-
+    '''
 
 def create_document_chunks(
     doc: Document, chunk_token_size: Optional[int]
@@ -119,6 +128,18 @@ def create_document_chunks(
 
     # Split the document text into chunks
     text_chunks = get_text_chunks(doc.text, chunk_token_size)
+
+    '''
+    # write output to local result.txt
+    # TODO: This can be removed, it's here for test purpose only
+
+    final = ''
+    for chunk in text_chunks:
+        final += '\n text_chunk: ' + chunk
+    
+    with open('result.txt', 'w') as f:
+        f.write(final)
+    '''
 
     metadata = (
         DocumentChunkMetadata(**doc.metadata.__dict__)
