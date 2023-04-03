@@ -1,9 +1,18 @@
 import os
 import traceback
-import uvicorn
+
+import dotenv
 from fastapi import FastAPI, File, HTTPException, Depends, Body, UploadFile
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
+import uvicorn
+
+from chains.base import aggregate
+from models.models import AggregatedQueryResult
+from models.api import AggregateQueryResponse
+dotenv.load_dotenv("../.env")
+
+
 
 from models.api import (
     DeleteRequest,
@@ -36,7 +45,7 @@ sub_app = FastAPI(
     description="A retrieval API for querying and filtering documents based on natural language queries and metadata",
     version="1.0.0",
     servers=[{"url": "https://your-app-url.com"}],
-    dependencies=[Depends(validate_token)],
+    # dependencies=[Depends(validate_token)],
 )
 app.mount("/sub", sub_app)
 
@@ -90,6 +99,16 @@ async def query_main(
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
+@app.post("/full-query", response_model=AggregateQueryResponse)
+async def full_query(request: QueryRequest = Body(...)):
+    try:
+        results = await datastore.query(request.queries)
+        agg_results = await aggregate(results)    
+        return AggregateQueryResponse(results=agg_results)
+    except Exception as e:
+        traceback.print_exc()
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
 
 @sub_app.post(
     "/query",

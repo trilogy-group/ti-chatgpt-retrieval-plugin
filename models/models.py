@@ -46,6 +46,7 @@ class DocumentWithChunks(Document):
 
 
 class DocumentMetadataFilter(BaseModel):
+    document_id: str
     name: Optional[str] = None
     parents: Optional[str] = None
     mimeType: Optional[str] = None
@@ -72,3 +73,7 @@ class QueryWithEmbedding(Query):
 class QueryResult(BaseModel):
     query: str
     results: List[DocumentChunkWithScore]
+
+class AggregatedQueryResult(QueryResult):
+    answer: str
+    sources: List[str]
