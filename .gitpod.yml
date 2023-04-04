@@ -6,9 +6,11 @@ tasks:
   - name: "Set up"
   - command: |
       pip install poetry
-      poetry env use 3.10
+      pyenv update
+      pyenv install 3.10.10
+      pyenv shell 3.10.10
       poetry shell
       poetry install
-      pooetry run start
+      poetry run start
 
 
