@@ -18,6 +18,10 @@ class DocumentMetadata(BaseModel):
     originalModifiedTime: Optional[str] = None
     originalOwnersEmail: Optional[str] = None
     originalCreatedTime: Optional[str] = None
+    people: Optional[List[str]] = []
+    technologies: Optional[List[str]] = []
+    organizations: Optional[List[str]] = []
+    productsInvolved: Optional[List[str]] = []
 
 
 class DocumentChunkMetadata(DocumentMetadata):
@@ -58,6 +62,10 @@ class DocumentMetadataFilter(BaseModel):
     createdTimeEndDate: Optional[str] = None  # any date string format
     modifiedTimeStartDate: Optional[str] = None  # any date string format
     modifiedTimeEndDate: Optional[str] = None  # any date string format
+    people: Optional[List[str]] = []
+    technologies: Optional[List[str]] = []
+    organizations: Optional[List[str]] = []
+    productsInvolved: Optional[List[str]] = []
 
 class Query(BaseModel):
     query: str

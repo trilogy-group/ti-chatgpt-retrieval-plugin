@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI, File, HTTPException, Depends, Body, UploadFile
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
+from services.enrich_document_metadata import enrich_document_metadata
 
 from models.api import (
     DeleteRequest,
@@ -66,9 +67,14 @@ async def upsert(
     request: UpsertRequest = Body(...),
 ):
     try:
+        # Enrich document metadata
+        enrich_document_metadata(request.documents)
+        # print('check: ', request.documents)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
         ids = await datastore.upsert(request.documents)
         return UpsertResponse(ids=ids)
     except Exception as e:
+        traceback.print_exc()
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 

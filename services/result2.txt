@@ -1,0 +1,3164 @@
+
+ text_chunk: [width="100%",cols="100%",options="header",]
+|===
+a|
+== Prod2 Technical Teardown Spec
+
+*Engine Yard: EY Kontainers*
+
+|===
+
+[width="100%",cols="16%,32%,21%,31%",options="header",]
+|===
+|*Epic ID*
+|https://jira.devfactory.com/browse/CENPRO-10070[[.underline]#CENPRO-10070#]
+|*Author* a|
+mailto:david.carley@devfactory.com[[.underline]#David Carley#]
+
+*API WU*: mailto:ben.new@devfactory.com[[.underline]#Ben New#]
+
+*Data Structures WU*: mailto:zeb.hardy@devfactory.com[[.underline]#Zeb
+Hardy#]
+
+|*Business SME*
+|mailto:%20rahul.subramaniam@devfactory.com[[.underline]#Rahul
+Subramaniam#] |*Technical SME*
+|mailto:dvalfre@engineyard.com[[.underline]#Daniel Valfre#]
+
+|*Date* |October 1, 2021 |*Type* |Other internal teardown
+
+|*Input Data* |See link:#sicxr8190o7[[.underline]#below#] |*Interview
+Recording* a|
+https://crossover.zoom.us/rec/share/mTSAGDp1rAMR6AZgWz5ntem0bOYulU8sE3uLJM1mfJvhr4fidVyW4oEDaqzGAO1x.fjjS9ea08oU0qd-s[[.underline]#Rahul#]
+(Passcode: VL%D.Rg0)
+ text_chunk: https://crossover.zoom.us/rec/share/B2zk7MSkrZJYPHiNGg9-I4pAMuCA8aMuUEPXwSEGqqLRcL2BLChQ9JsG3IcWywcS.GecrHVwznDkT0Z9V[[.underline]#Daniel
+#1#] (Passcode: 4$h^gX$c)
+
+https://crossover.zoom.us/rec/share/Y5fLEQa6P762AJbdc7e1Sj9oNyodZZn717eHN-xMCb1nUA9vG33fmd2Q3gkHKPtr.csZXVep2QR7y7xQh[[.underline]#Daniel
+#2#] (Passcode: e*dNe9$j)
+
+|*Related Specs* a|
+https://docs.google.com/document/d/1LNXOBuYte1KBFqU6GIkx7HY43VZcN7ERVq74DxHjCGI[[.underline]#Engine
+Yard Clone#] (2019-08-08)
+
+https://docs.google.com/document/d/1nF_7B1FpN2tt2ontIYa_TaUSV6wPWzk2YWA57E76w60/edit#heading=h.7t89k0ssag70[[.underline]#Switch
+Billing to Netsuite#] (2019-03-13)
+
+https://docs.google.com/document/d/15GwIM8Wrx_tshEZio8gJJzZFFl1UmkXuoGtSTIypNFg/edit?usp=drivesdk[[.underline]#Auto-submit
+invoices to Netsuite#] (2020-11-12)
+
+https://docs.google.com/document/d/1VqhhzvxEBxz5Ubyr5cWjwPD1DSVfTvH70XaJbmZumjI/edit#[[.underline]#L2
+Spec - Engine Yard Container Platform#] (Late 2017)
+ text_chunk: https://docs.google.com/document/d/1qoeXFQo4fo2dFOSNoh8RL6QBzdz-lsdBRJqV_Jae9k0/edit#heading=h.c87huzjguu1z[[.underline]#L2
+Spec - Engine Yard Application Deployment Platform#] (Early 2018)
+
+| |
+
+|*Previous Exec Feedback* |None | |
+
+|*Changes Since the Previous Version* |None | |
+
+|*Change Log* |Approved in
+https://docs.google.com/spreadsheets/d/1NZ9BBq78tYs38Mical8hjZ7_R6iIHCR95jAmrB1MwDQ/edit#gid=596851342[[.underline]#W39#]
+2021 | |
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Teardown Summary
+
+What is this teardown addressing about the product?
+
+|*Introduction*
+
+|EY Kontainers is a Platform as a Service for deploying and managing
+Kubernetes containers. It is particularly interesting to existing Engine
+Yard Cloud (EYC) customers, who are Ruby developers, as it provides a
+migration path from EYC. For Kubernetes containers it is simpler than
+Amazon EKS.
+
+|*Questions that are answered*
+ text_chunk: a|
+* {blank}
++
+____
+What is the upgrade path for existing customers on EYC to EYK, and what
+benefits do they get?
+____
+* {blank}
++
+____
+What does EYK deliver over AWS EKS? How does it differ from EKS?
+____
+* {blank}
++
+____
+How could we simplify EYK?
+____
+
+|*Inputs*
+
+a|
+*EngineYard Kontainers*
+
+https://docs.google.com/document/d/1qM4j1C51A37Wejy4y82sK6taG0QebCgK-3PKcUz7FqE/edit[[.underline]#Central
+Eng Import Document (RCDS)#]
+
+https://support.cloud.engineyard.com/hc/en-us/articles/360058885853-Introduction-to-Engine-Yard-Kontainers[[.underline]#Introduction
+to Engine Yard Kontainers#]
+
+https://support.cloud.engineyard.com/hc/en-us/sections/360009109134-Engine-Yard-Kontainers-New-User-Guide[[.underline]#New
+User Guide#]
+
+https://support.cloud.engineyard.com/hc/en-us/sections/1260800560450-Quick-Start-Guide[[.underline]#Quick
+Start Guide#]
+
+https://support.cloud.engineyard.com/hc/en-us/articles/360058941713[[.underline]#How
+Kontainers Works#]
+ text_chunk: https://docs.teamhephy.com[[.underline]#Team Hephy Docs#]
+
+https://github.com/engineyard/ky-sample-applications/blob/master/sample-application-3/README.md[[.underline]#An
+EYK sample application#]
+
+*Source Code*
+
+https://github.com/trilogy-group/eyk-client-go[[.underline]#eyk-client-go#]
+- go client for EYK backend
+
+https://github.com/engineyard[[.underline]#EngineYard GitHub Org#]
+ text_chunk: * {blank}
++
+____
+https://github.com/engineyard/harbour_master[[.underline]#https://github.com/engineyard/harbour_master#]
+- this is the multitenancy layer that EYK adds on top of Hephy
+____
+** {blank}
++
+____
+https://github.com/engineyard/harbour_master/tree/develop/lib/persistence/relations[[.underline]#harbour_master/lib/persistence/relations/#]
+- data model definitions for harbour_master
+____
+* {blank}
++
+____
+https://github.com/engineyard/port_authority[[.underline]#https://github.com/engineyard/port_authority#]
+- orchestrates EYK tasks
+____
+* {blank}
++
+____
+https://github.com/engineyard/ky-infrastructure[[.underline]#https://github.com/engineyard/ky-infrastructure#]
+____
+* {blank}
++
+____
+https://github.com/engineyard/eyk[[.underline]#https://github.com/engineyard/eyk#]
+- the CLI tool, forked from teamhephy/workflow-cli
+____
+* {blank}
++
+____
+https://github.com/engineyard/hephy-controller[[.underline]#https://github.com/engineyard/hephy-controller#]
+____
+** {blank}
++
+____
+https://github.com/engineyard/hephy-controller/tree/master/rootfs/api/models[[.underline]#hephy-controller/models#]/
+- data model definitions for Hephy.
+____
+* {blank}
++
+____
+https://github.com/engineyard/ky-dash[[.underline]#https://github.com/engineyard/ky-dash#]
+____
+* {blank}
++
+____
+https://github.com/engineyard/ky-signup-2[[.underline]#https://github.com/engineyard/ky-signup-2#]
+____
+* {blank}
++
+____
+https://github.com/engineyard/ky-billing-backend[[.underline]#https://github.com/engineyard/ky-billing-backend#]
+- billing agent collecting usage data
+____
+* {blank}
++
+____
+https://github.com/engineyard/ky-billing-agent[[.underline]#https://github.com/engineyard/ky-billing-agent#]
+____
+* {blank}
++
+____
+https://github.com/engineyard/hephy-router[[.underline]#https://github.com/engineyard/hephy-router#]
+____
+ text_chunk: * {blank}
++
+____
+Hephy Image builders
+____
+** {blank}
++
+____
+https://github.com/teamhephy/builder[[.underline]#Builder#]
+____
+** {blank}
++
+____
+https://github.com/teamhephy/dockerbuilder[[.underline]#Docker Builder#]
+____
+** {blank}
++
+____
+https://github.com/teamhephy/slugbuilder[[.underline]#Slug Builder#]
+____
+
+https://medium.com/@beauvrolyk/deis-workflow-the-best-way-to-deploy-12-factor-apps-on-kubernetes-28fd4f44b93f[[.underline]#An
+explanation of Deis (and by extension&#44; Hephy)#]
+
+*EngineYard Cloud*
+
+https://docs.google.com/document/d/1tA1_ogX189yTfbEys8y2MtEcOeSLBPJ4GRaubbFvDpU/edit[[.underline]#Product
+Architecture#]
+
+https://drive.google.com/drive/folders/14xWi8XCX3BGBtQcYq7kib4j6mvO98WpE[[.underline]#Engine
+Yard documents on GDrive#]
+
+https://github.com/trilogy-group/ey-smithy/blob/master/db/structure.sql[[.underline]#EY
+Cloud database dump#]
+
+https://docs.teamhephy.com/[[.underline]#Hephy/Deis Workflow#]
+
+|*1-sentence Goal*
+ text_chunk: |EYK provides a platform as a service offering which simplifies
+application delivery.
+|===
+
+== Background
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Product/Company Positioning
+
+What is most important to know about Who, What, How, and Why?
+
+|
+a|
+*CUSTOMER NICHE*
+
+_Who is the product for?_
+
+|Small development shops, SMBs, startups - primarily those working with
+Ruby on Rails.
+
+a|
+*BUSINESS PROBLEM*
+
+_What business problem are they trying to solve?_
+
+|Small businesses do not have the skills, time, or will to design,
+manage, monitor, maintain and scale container infrastructure to support
+production workloads.
+
+a|
+*PRODUCT SOLUTION*
+
+_What does this product do for them that solves it?_
+
+|Automates the deployment, running, management, and scaling of
+containerized production applications in the cloud.
+
+a|
+*ALTERNATIVE SOLUTION*
+
+_What is an alternative solution to the problem? How does it solve the
+problem differently?_
+ text_chunk: a|
+* {blank}
++
+____
+Hire a DevOps team, either internal or external.
+____
+* {blank}
++
+____
+Have the existing development team learn and perform deployment and
+monitoring tasks, taking developer time away from adding value to the
+product.
+____
+
+a|
+*IMPLEMENTATION APPROACH*
+
+_What is the important idea about the implementation approach for this
+product?_
+
+a|
+* {blank}
++
+____
+Build a Kubernetes-based PaaS product, leveraging Hephy for all heavy
+lifting.
+____
+* {blank}
++
+____
+EYK provides superior customer isolation by providing each customer with
+their own AWS account and cluster.
+____
+
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Product Summary - Engine Yard Kontainers
+
+|
+a|
+*IMPORTANT NAMES*
+
+_What brands/names will we come across?_
+ text_chunk: a|
+* {blank}
++
+____
+*EngineYard Kontainers (EYK)*: A NoOps PaaS built on AWS EKS
+____
+* {blank}
++
+____
+https://docs.teamhephy.com/[*[.underline]#Hephy#*]: An open-source set
+of components that includes capabilities for building and deploying from
+source via *git push*, simple application configuration, creating and
+rolling back releases, managing domain names and SSL certificates,
+providing seamless edge routing, aggregating logs, and sharing
+applications with teams. All of this is exposed through a simple REST
+API and command line interface.
+____
+* {blank}
++
+____
+*Deis*: The predecessor of Hephy. Sold to Microsoft when ESW acquired
+EngineYard.
+____
+* {blank}
++
+____
+*OCU* - Optimized Container Unit. This is the primary simplifying
+abstracting in EYK, making cluster provisioning and scaling simpler for
+customers.
+____
+* {blank}
++
+____
+*Mothership* - This is EYK’s “master cluster”, which is managed by EYK
+itself, and runs the control plane services for all of EYK.
+____
+* {blank}
++
+____
+*https://www.google.com/url?q=https://github.com/engineyard/harbour_master/blob/develop/docs/v1-api.md&sa=D&source=editors&ust=1631052145826000&usg=AOvVaw3bJjmYK7rCnJzpRpCqZuDg[[.underline]#HarborMaster#]*
+- HarbourMaster is an authenticated JSON REST API that one uses to
+interact with EYK clusters and their associated resources
+____
+* {blank}
++
+____
+https://www.google.com/url?q=https://github.com/engineyard/port_authority/blob/develop/README.md&sa=D&source=editors&ust=1631052145830000&usg=AOvVaw0VrGpAjstFkauA6S9Ov_Ua[*[.underline]#Port
+Authority#*] - The authority that orchestrates tasks through the EYK
+backends. At this moment it handles:
+____
+** {blank}
++
+____
+Backend tasks for the Signup app/page
+____
+** {blank}
++
+____
+Notification of different events using Zendesk and Slack
+____
+ text_chunk: a|
+*DELIVERY MODEL*
+
+_How is the product delivered to the customer?_
+
+|SaaS/PaaS
+
+a|
+*BRIEF HISTORY*
+
+_How did the product evolve?_
+ text_chunk: a|
+* {blank}
++
+____
+*April 2015 (pre-acquisition)*: EngineYard purchases OpDemand, and their
+PaaS, Deis Workflow. Work begins on productizing Deis, later abandoned.
+____
+* {blank}
++
+____
+*April 2017*: Crossover acquires EngineYard, sells Deis to Microsoft.
+____
+* {blank}
++
+____
+*September 2017*: Hephy is forked from Deis
+____
+* {blank}
++
+____
+*November 2018*: EYK is conceived, due to market loss to Heroku and
+other PaaS players.
+____
+* {blank}
++
+____
+*March 2019*: Alpha version of EYK, working with EY customer
+https://www.comestri.com/[[.underline]#Comestri#] to begin exercising
+the platform.
+____
+* {blank}
++
+____
+*November 2019*: First production workload/MVP
+____
+* {blank}
++
+____
+*March 2020*: Half of the workload - ready to go from MVP to scale
+____
+* {blank}
++
+____
+*July 2020*: Dev Graph portfolio and public beta - sign up and start
+testing the platform. Added interactive shell and better UI.
+____
+* {blank}
++
+____
+*January 2021*: General Availability - open sign up
+____
+ text_chunk: a|
+*LIFE CYCLE STAGE*
+
+_Where is the product in its life cycle?_
+
+a|
+Generally Available
+
+* {blank}
++
+____
+Under active development
+____
+* {blank}
++
+____
+Being imported to Central Eng now
+____
+
+a|
+*KEY FIGURES*
+
+_Key stats about the product_
+
+a|
+*Engine Yard Kontainers*
+
+[width="100%",cols="31%,36%,33%",options="header",]
+!===
+!*Year* !*Revenue* !*Customers*
+!*2021 (predicted)* !$50k !7
+!===
+
+_(First full EYK billing month was July 2021, at ~$9K. Expected to
+increase, but predicted using that amount)_
+
+* +
+Engine Yard Cloud (for comparison)*
+
+[width="100%",cols="31%,36%,33%",options="header",]
+!===
+!*Year* !*Revenue* !*Customers*
+!*2018 (from
+https://docs.google.com/document/d/1LNXOBuYte1KBFqU6GIkx7HY43VZcN7ERVq74DxHjCGI/edit[[.underline]#EYC
+TT#])* !$16mm !1200
+
+!*2019* !$13.7mm !659
+
+!*2020* !$10.3mm !545
+
+!*2021 (projected)* !$9.7mm ($5.7mm to date) !475
+!===
+
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Competitive Comparison
+
+|
+a|
+*COMPETITOR*
+ text_chunk: _Who is the competitor(s) that you are most likely to win or lose to?_
+
+a|
+Heroku
+
+AWS AppRunner
+
+a|
+*COMPETITOR SIMILARITIES*
+
+_In what important ways are you similar?_
+
+a|
+All provide containerization as a service
+
+All support git push
+
+All run on AWS
+
+a|
+*COMPETITOR DIFFERENCES*
+
+_In what important ways are you different?_
+
+a|
+EYK:
+
+* {blank}
++
+____
+Low infrastructure cost is both a primary objective of EYK and a
+differentiating feature.
+____
+* {blank}
++
+____
+Simpler to use, by virtue of limiting choices and eliminating decisions.
+____
+* {blank}
++
+____
+Marketed primarily to Ruby on Rails developers.
+____
+
+AWS AppRunner:
+
+* {blank}
++
+____
+Automatic certificate management,
+____
+* {blank}
++
+____
+Container Pause and Resume support and
+____
+* {blank}
++
+____
+Different billing model (vCPU + Memory minutes)
+____
+* {blank}
++
+____
+Provides git-based deployments for Node and Python
+____
+* {blank}
++
+____
+Can run any app that can be containerized
+____
+
+Heroku:
+ text_chunk: * {blank}
++
+____
+Heroku charges for HIPAA/PCI compliance, EYK provides passthrough HIPAA
+& PCI compliance from AWS at no extra cost
+____
+
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Customer-focused CIV Problems
+
+A CIV Problem is a real problem a customer faces. It describes a market
+opportunity, not the product. These statements describe the problem at
+hand; the problem that the product solves. CIV Problems are not
+marketing fluff or spin -- they are honest and correct problem
+statements, entirely problem-focused, not solution-focused.
+
+|
+a|
+*CHALLENGING PROBLEMS*
+
+_Thinking about the customer, what if anything would they find
+challenging to build themselves?_
+
+a|
+[arabic]
+. {blank}
++
+____
+*Technical Complexity*: It is challenging for customers to design,
+deploy, manage, and scale a stable infrastructure without skilled
+personnel dedicated to the task.
+____
+
+a|
+*IMPORTANT PROBLEMS*
+ text_chunk: _Thinking about the customer, what, if anything, would they say is
+really Important for the product to solve? What is going to make them
+pick one competitor over another?_
+
+a|
+[arabic, start=2]
+. {blank}
++
+____
+*Customer Isolation*: It is important to customers that their data is
+private and that third parties cannot influence the performance of their
+application
+____
+. {blank}
++
+____
+*Ease of Use*: Important to make the solution easy to use because our
+target customers are not domain experts in containerization
+____
+. {blank}
++
+____
+*Intuitive Interfaces*: Important to have an intuitive interface so that
+customers are not confused or put off by the complexity
+____
+. {blank}
++
+____
+*Standards Compliance*: It is important to have HIPAA and PCI compliance
+because it is a necessity for some customers
+____
+. {blank}
++
+____
+*Interactive Shell*: A customer needs to be able to shell into a
+deployed container to change parameters or run commands to enable
+debugging of their applications.
+____
+ text_chunk: a|
+*VALUABLE PROBLEMS*
+
+_Thinking about the customer, what problems does this product solve that
+have a direct financial consequence on the customer?_
+
+a|
+[arabic, start=6]
+. {blank}
++
+____
+*Pricing Model*: It is valuable to have a clear and predictable pricing
+model so that there are no surprises, bill shock, or unbudgeted
+expenses.
+____
+. {blank}
++
+____
+*24/7 Support*: It is valuable to have support constantly available to
+minimize costly downtime.
+____
+
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Product-focused CIV Problems
+
+Sometimes a product needs to solve CIV problems that come from the goals
+of the company and not its customers. For example, maybe it is important
+to a company for their SaaS product to scale to 1000 customers, but each
+customer is not concerned about that.
+
+|
+a|
+*CHALLENGING PROBLEMS*
+
+_Thinking about the company building the product, what if anything was
+challenging in building it?_
+ text_chunk: a|
+[arabic]
+. {blank}
++
+____
+*Observability*: It is challenging for operations teams to maintain
+detailed observability of a customer's workloads while still preserving
+the confidentiality of their data.
+____
+. {blank}
++
+____
+*Cost Attribution*: For a customer’s globally distributed workload, it
+is challenging to attribute a compute and storage cost to a specific
+customer
+____
+. {blank}
++
+____
+*Upgrading Frequency*: It is challenging to maintain compatibility
+between the complex EYK stack built on top of AWS EKS and AWS EKS
+because AWS upgrades the underlying AWS EKS K8s stack every 6 months.
+____
+
+a|
+*IMPORTANT PROBLEMS*
+
+_Thinking about the company building the product, what if anything was
+really Important to solve to meet the company’s goals?_
+
+a|
+[arabic, start=4]
+. {blank}
++
+____
+*Garbage Collection*: It is important to remove resources that are no
+longer needed to reduce non-attributable costs and conserve limited
+resources.
+____
+
+|===
+
+==  +
+Insights
+ text_chunk: [width="100%",cols="100%",options="header",]
+|===
+a|
+=== P2 Technical Insights
+
+a|
+*Kubernetes was an Important Business Decision*
+
+Normally, the choice of a platform like Kubernetes would be an ITD, but
+in this case it was an *IBD*. The business wanted a clear concept to
+communicate to customers, and private Kubernetes clusters is that
+cornerstone concept. Every customer gets their own private K8S cluster
+(or more than one, if they choose), provisioned within a dedicated,
+EY-managed AWS account.
+
+*A fundamental flaw*
+
+Early in the development of EYK, a choice was made that the product must
+maintain a cloud-agnostic stance. This choice led to increased
+complexity across the board, and is manifested in:
+
+* {blank}
++
+____
+Using Hephy for platform abstraction, rather than coding directly to EKS
+____
+* {blank}
++
+____
+Terraform for cluster infrastructure deployment
+____
+* {blank}
++
+____
+Deploying per-cluster K8S pods for monitoring tooling such as Grafana,
+Prometheus, etc.
+____
+ text_chunk: Taking an AWS-centric approach would allow for a significant
+simplification of the codebase, but also with regards to operations and
+per-cluster overhead.
+
+*Cluster “overhead” is a problem*
+
+It currently takes nearly an hour to provision a new cluster, and the
+various infrastructure pods that are created occupy a significant
+fraction (approx. 60%) of the cluster’s initial compute/memory capacity.
+
+This infrastructure overhead increases the minimum price EYK can charge
+(currently $800/cluster/month) for a cluster. Many existing EYC
+customers are only spending $200-$300/month. Moving their workloads to
+EYK would be $800/month, plus the OCU (execution resources) cost of
+actually running their application on the cluster. According to EYK
+support, this is a significant barrier to migration.
+
+Multiple suggestions are made regarding this topic in the ITDs and
+Improvements.
+
+*Hephy falls short*
+ text_chunk: Hephy’s primary purpose is to make the management of a K8s cluster
+simpler, and it does a reasonable job of this, for the things that it
+supports. However, EYK had to make a number of extensions and changes to
+Hephy (resulting in EYK maintaining a private fork), to enable: custom
+user management, single sign-on, migration, console access, improved
+error handling, etc.
+
+Hephy provides no assistance with some of the future-looking goals of
+EYK, including: EFS and EBS support, support for multiple open ports per
+pod, sidecar containers, and more.
+
+*Hephy increases EYK’s complexity*
+
+Hephy was chosen as the backbone of EYK to accelerate development and
+reduce total code ownership. Unfortunately, the use of Hephy brings
+substantial complexity, largely due to the fact that EYK has forked the
+public Hephy repo, and pays the price of rebasing and fixing problems
+every time a new version of Hephy is released. According to the SME,
+this process can take weeks of engineering effort to complete.
+ text_chunk: Alternative solutions include switching to a smaller, simpler, and more
+modern platform abstraction such as Porter, or even simply implementing
+directly to EKS.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== P2 Other Feedback
+
+a|
+Beyond the marketing communications value of “Private Kubernetes
+Clusters”, it’s unclear why small software teams without DevOps
+expertise would care about Kubernetes. It seems likely that the true
+driving factor for many of these customers is simplicity of deployment
+and operational maintenance, as well as the cost/value proposition of
+the product.
+
+The core value here appears to be providing a product that makes it
+absolutely trivial to deploy and provide operational oversight of
+small-to-medium sized container-compatible applications. Kubernetes and
+clusters should be simply an implementation detail.
+ text_chunk: On a related note, Amazon offers more than 17 distinct ways of running
+containerized workloads on AWS. There is certainly a business
+opportunity here to provide a dramatically simple solution for
+auto-scaled containerized workloads.
+
+I recommend that we reevaluate the product from the ground up, with TPM
+involvement, including a product roadmap.
+
+|===
+
+[width="100%",cols="39%,61%",options="header",]
+|===
+a|
+=== Frequently Asked Questions (FAQ)
+
+|
+|*Is this product in a state to invest in? Or do
+architecture/infrastructure issues need to be fixed first?* |No, there
+are a number of simplifications that should be made to the product to
+allow for better scaling and lower operational burden.
+
+|*Is this product a foundation to build on for the next decade?* |No, I
+recommend considering a 5K Rebuild, aiming for core business value,
+simplicity, and removing dependency on legacy EY systems.
+ text_chunk: |*Is the complexity of this product appropriate for the problems it
+solves?* |No, it is significantly more complex than necessary for the
+stated target market.
+
+|*What % of effort goes into supporting and improving the infrastructure
+& platform?* a|
+Not tracked, but SME estimated 25% for EngineYard overall.
+
+This is obfuscated by several factors:
+
+* {blank}
++
+____
+One of the primary market differentiators for Engine Yard as a brand, is
+a high level of support for customers. It’s not clear where the line is
+drawn between platform support (defects, etc) and pure customer support.
+____
+* {blank}
++
+____
+EYK has only 10-15 customers, so the support burden for EYK is not
+established. Anecdotally, the SME stated that it appears to be slightly
+lower than EYC.
+____
+
+|===
+
+== Solution Analysis
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Product Inputs, Outputs, Controls
+
+|
+a|
+*INPUTS*
+
+_What are the important inputs to the system?_
+
+a|
+Code:
+ text_chunk: * {blank}
++
+____
+Code + proc file
+____
+* {blank}
++
+____
+Code + proc file + docker file
+____
+* {blank}
++
+____
+Docker image and startup command
+____
+
+Set of configuration values: DB connection strings, secrets, other env
+variables
+
+a|
+*OUTPUTS*
+
+_What are the important outputs from the system?_
+
+a|
+* {blank}
++
+____
+Running application pods
+____
+* {blank}
++
+____
+Logs Metrics, and Alerts
+____
+* {blank}
++
+____
+Dashboards showing resource utilization
+____
+* {blank}
++
+____
+OCU usage and billing information
+____
+
+a|
+*CONTROLS*
+
+_What are the important things the user controls to affect how the
+inputs turn into the outputs?_
+
+a|
+* {blank}
++
+____
+Command Line switches
+____
+* {blank}
++
+____
+Console configuration settings
+____
+* {blank}
++
+____
+Scaling limits
+____
+* {blank}
++
+____
+Alerts Thresholds
+____
+
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Core Functions
+ text_chunk: This is about the solution chosen by this particular product, describing
+the most important things the product does to turn the inputs into the
+outputs. It’s not about software components, it’s about the logical
+steps (with a focus on the non-obvious) to get from inputs to outputs,
+worded to make sense to a user of the product.
+
+|
+|*Name* |*Description*
+
+|*Build* |How does the container for the users app get built when a
+change is committed to GitHub?
+
+|*Test* |How does the user validate that a given build is good, and
+ready to be deployed to production?
+
+|*Deploy* |How does the app get deployed for production use?
+
+|*Monitor* |How does the platform allow the user to access logs,
+monitors, metrics, alerts?
+
+|*Fix* |How does the user fix issues in their app?
+|===
+
+== 
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+=== Important Topics
+
+|
+|*Topic Name* |*Brief Description*
+
+|*Cluster Management* |Fundamental choices about Kubernetes, Hephy, and
+cluster infrastructure
+ text_chunk: |*Application Management* |How does the user manage their applications
+once running on their cluster?
+|===
+
+==  +
+
+== Implementation (Including ITDs)
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Whiteboard Diagram
+
+If you were going to explain how the product works to someone, what
+diagram would you draw on the whiteboard that you would then talk
+through?
+
+|https://lucid.app/lucidchart/invitations/accept/inv_307caa93-62a6-4980-83c8-46b82564de84[image:media/image3.png[media/image3,width=539,height=416]]
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Implementation Overview
+
+Explain what the technical solution is in simple terms
+
+a|
+EYK is a fork of Hephy, extended to support SSO integration, customer
+management, and centralized log collection.
+ text_chunk: EYK has also forked the Hephy CLI tool to create the `eyk` cli tool.
+Additional commands have been added to support SSO login, generation of
+EYK-specific support files, set auto-scaling parameters, and generally
+ease use of EYK from the command line.
+
+All the Kubernetes management, docker image creation, execution, and
+other PaaS features are implemented by
+https://web.teamhephy.com/[[.underline]#Hephy#].
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+==== Important Decisions
+
+|There are a couple of cross-cutting decisions that impact all of EYK.
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD OVERALL.1 - Design for multi-cloud, but build on AWS*
+
+|
+|*THE PROBLEM* |How should EYK address multi-cloud support?
+ text_chunk: |*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Design and build a multi-cloud system
+____
+. {blank}
++
+____
+Ignore multi-cloud, design and build only for AWS
+____
+. {blank}
++
+____
+*Design for multi-cloud, but build on AWS*
+____
+
+|*REASONING* a|
+Option 1 was rejected because multi-cloud support was not a priority or
+a goal.
+
+Option 3 was chosen over Option 2 to future-proof the product in case
+support for multiple clouds was desirable in the future.
+
+|*P2 FEEDBACK* |Several of the decisions below are rooted in this
+fundamental decision, and it leads to increased complexity in the
+product and operational overhead of clusters. It is also at the root of
+the fact that provisioning a new cluster takes nearly an hour, which was
+identified by business leadership as a primary concern for the product.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+ text_chunk: I would design and build the product to lean deeply into AWS services,
+thereby simplifying the overall solution. See the other ITDs below, and
+the link:#improvement-plan[[.underline]#Improvement Plan#] for specific
+suggestions.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD OVERALL.2 - Reuse as much of EYC as possible*
+
+|
+|*THE PROBLEM* |Should EYK be built as a standalone platform, or should
+it reuse things from EYC?
+
+|*OPTIONS CONSIDERED* a|
+[arabic]
+. {blank}
++
+____
+Build EYK as a standalone platform
+____
+. {blank}
++
+____
+*Reuse as much of EYC as possible*
+____
+
+|*REASONING* |The goal was to build EYK quickly, and with a minimum of
+engineering investment. Reusing as much of EYC as possible helped
+short-cut the implementation.
+
+|*P2 FEEDBACK* a|
+Multiple subsystems were reused from EYC:
+ text_chunk: * {blank}
++
+____
+Billing (Johnny Cash)
+____
+** {blank}
++
+____
+A separate EYK usage consumption piece had to be built
+____
+** {blank}
++
+____
+Customer invoices are created manually in Johnny Cash by EYK staff,
+using the cluster usage data.
+____
+* {blank}
++
+____
+Customer Account Management
+____
+** {blank}
++
+____
+As implemented, the experience of getting started with EYK is very
+confusing.
+____
+* {blank}
++
+____
+User Management / SSO
+____
+** {blank}
++
+____
+EYK has to manage synchronization of user identities between EYC, Hephy,
+Kibana, and Grafana.
+____
+** {blank}
++
+____
+Required custom modifications to Hephy to work with EYC user management
+____
+* {blank}
++
+____
+Alert management
+____
+* {blank}
++
+____
+Integration with Zendesk
+____
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+ text_chunk: I would have created EYK as a stand-alone product as much as possible,
+aiming for a simple and modern architecture, with the goal of sunsetting
+the legacy EYC codebase.
+
+|===
+
+[width="100%",cols="18%,82%",options="header",]
+|===
+a|
+=== Edge API: Harbour Master Management API
+
+|
+|*Overview* |Harbour Master is the resource management layer added by
+EYK to Hephy. It presents an API to control that resource management by
+provisioning, configuring and deleting resources. This is used by the
+eyk CLI tool.
+
+|*API Pattern* |Simple HTTP API transporting JSON data.
+
+|*Authentication* |API key, specified in the Authorization header. This
+is a standard pattern.
+
+|*Resources and Actions* a|
+All resource creation and deletion actions (buckets, databases, caches
+and machine users) are asynchronous; the request returns immediately
+while the resource creation continues.
+ text_chunk: [width="100%",cols="43%,21%,36%",options="header",]
+!===
+!*Resource(s)*footnote:[An asterisk (*) represents the identifier of a
+specific resource (e.g. in /clusters/*, the * represents the cluster
+ID).] !*Supported Actions* !*Description*
+!/v1/organizations/*/clusters !GET, DELETE !List an org’s clusters. Mark
+a cluster for deletion. Deleting a non-empty cluster will fail.
+
+!/v1/organizations/*/clusters/*/mpc !GET !Get MarketPlace Credentials.
+
+!/v1/organizations/*/clusters/*/buckets/* !GET, POST, DELETE !
+
+! !GET, POST, DELETE !
+
+!/v1/organizations/*/clusters/*/machines/* !GET, POST, DELETE !List,
+create and delete machine users within a given cluster.
+!===
+
+|*Metrics* |API usage is very low. These are administration and
+reporting functions, which are used in occasional, irregular activities.
+The operations are simple, and the load is minimal, to the point that
+the SME stated there is no autoscaling used for Harbour Master, nor any
+need for it.
+ text_chunk: |*References*
+|https://github.com/engineyard/harbour_master/blob/develop/docs/v1-api.md[[.underline]#API
+v1 documentation#] (EngineYard organisation in GitHub)
+
+|*P2 Feedback* a|
+This is a simple management API with no apparent complexity. Some
+operations (AWS resource creation and deletion) are inherently
+asynchronous.
+
+The restriction to previous generation, burstable medium instance types
+for databases and caches is unnecessary and should be removed.
+
+|===
+
+[width="100%",cols="18%,82%",options="header",]
+|===
+a|
+=== Edge API: Hephy Controller
+ text_chunk: |
+|*Overview* |The Hephy Controller is the Hephy Workflow API server. It
+provides access to create, deploy and manage applications, keys,
+webhooks, users, authentication and certificates.
+https://github.com/engineyard/hephy-controller[[.underline]#EYK uses its
+own fork#] of the
+https://github.com/teamhephy/controller[[.underline]#upstream Hephy
+Controller repo#], with
+link:++#itd-edge.1---use-a-fork-of-hephy-to-manage-applications++[[.underline]#some
+minor differences#].
+
+|*API Pattern* |Simple HTTP API transporting JSON data.
+
+|*Authentication* |Supports OAuth1a and OAuth2, through its use of
+https://www.django-rest-framework.org/[[.underline]#Django REST
+framework#]. OpenID Connect support has also been added in the
+link:++#itd-edge.1---use-a-fork-of-hephy-to-manage-applications++[[.underline]#EYK
+fork#] of Hephy Controller.
+ text_chunk: |*Resources and Actions* a|
+[width="100%",cols="43%,21%,36%",options="header",]
+!===
+!*Resource(s)*footnote:[An asterisk (*) represents the identifier of a
+specific resource (e.g. in /apps/*, the * represents the application
+ID).] !*Supported Actions* !*Description*
+!/apps/* !GET, POST, DELETE !CRUD for application definitions.
+
+!/apps/*/builds/* !GET, POST !List, retrieve and create builds.
+
+! ! !List or retrieve releases of an app, and rollback existing
+releases.
+
+! ! !List pods, and restart a pod.
+
+! !GET, POST, DELETE !List and manage application details. Each is a
+simple CRUD (or a subset of CRUD) over a single, complex attribute.
+
+!/apps/*/run !POST !Run an ad hoc command in an ephemeral container.
+
+!/keys/* !GET, POST, DELETE !Manage SSH keys for the currently
+authenticated user.
+
+! !GET, POST !Manage web hooks for build creation and configuration
+changes.
+ text_chunk: !/auth/... !GET, POST, DELETE (each endpoint supports one method)
+!Standard API-based authentication mechanism, allowing registration,
+login, reset password, etc.
+
+!/admin/perms/* !GET, POST, DELETE !Manage admin permissions.
+
+! !GET, POST, DELETE !View and manage TLS certificates and domain names.
+
+!/users !GET !List users.
+!===
+
+|*Metrics* |API usage is low. This is a management API that receives
+irregular and infrequent requests when users use the web UI or the CLI.
+
+|*References* |Source code -
+https://github.com/engineyard/hephy-controller/blob/master/rootfs/api/urls.py[[.underline]#api/urls.py#],
+https://github.com/engineyard/hephy-controller/blob/5bdad97ef1d863ad9a453a79616dcd2d66f72cc5/rootfs/api/views.py[[.underline]#api/views.py#]
+(these files are identical to the upstream Hephy fork).
+ text_chunk: |*P2 Feedback* |This is an open source component with
+link:++#itd-edge.1---use-a-fork-of-hephy-to-manage-applications++[[.underline]#minor
+modifications#]; further information is available through documentation
+or via their https://slack.teamhephy.com/[[.underline]#Slack
+community#].
+|===
+
+[width="100%",cols="18%,82%",options="header",]
+|===
+a|
+=== Edge API: Usage & Billing
+
+|
+|*Overview* |Billing Agents installed on client clusters send billing
+information to the Billing backend through this API. This API is also
+used by the EYK UI to present usage and billing data to the user.
+
+|*API Pattern* |REST API transporting JSON data. The API provides
+navigation links in responses (e.g. a list of clusters provides links to
+retrieve stats for each cluster).
+ text_chunk: |*Authentication* |HTTP Basic Authentication. The username is hardcoded
+and the accepted passwords are
+https://github.com/engineyard/ky-billing-backend/blob/develop/README.md[[.underline]#given
+as environment variables to the Billing backend#].
+
+|*Resources and Actions*footnote:[Extracted from the
+https://github.com/engineyard/ky-billing-backend/blob/develop/docs/api.md[[.underline]#documentation
+in the component repository#].] a|
+[width="100%",cols="43%,21%,36%",options="header",]
+!===
+!*Resource(s)*footnote:[An asterisk (*) represents the identifier of a
+specific resource, or a start or end date. The date format is
+YYYY-MM-DD.] !*Supported Actions* !*Description*
+!/clusters/list-all-clusters !GET !List clusters.
+
+!/clusters/get-heartbeat-for-clusters !GET !Retrieve the last time an
+event was received per cluster.
+
+!/events/... !POST !Record a usage event. Invoked by Billing Agents.
+This URL receives many parameters.
+
+! !GET !Query raw events by account and/or cluster.
+ text_chunk: !/ocu-usage/... !GET !Retrieve “Optimized Container Usage” metrics for
+all clusters or a single cluster. There are three views of a single
+cluster: default, summary and details.
+!===
+
+|*Metrics* |The POST endpoint is called by each Billing Agent
+https://github.com/engineyard/ky-billing-agent/blob/b583cf664a8d2de02f3fd4f7c65c9d925dbbdff3/app/kubernetes/kubernetes.go#L116[[.underline]#on
+startup#] and
+https://github.com/engineyard/ky-billing-agent/blob/b583cf664a8d2de02f3fd4f7c65c9d925dbbdff3/app/kubernetes/kubernetes.go#L238[[.underline]#in
+response to Kubernetes event notifications#]. There is one Billing Agent
+per cluster, so metrics of the backend scale with cluster count.
+ text_chunk: |*References*
+|https://github.com/engineyard/ky-billing-backend[[.underline]#Source
+code#], in particular
+https://github.com/engineyard/ky-billing-backend/blob/develop/docs/api.md[[.underline]#API
+documentation#], and
+https://github.com/engineyard/ky-billing-backend/blob/develop/app/controllers/events_controller.rb#L18[[.underline]#this
+undocumented API endpoint#]
+
+|*P2 Feedback* |Collection of usage data, and retrieval of usage
+metrics, seem to be two separate concerns, which should have different
+authentication requirements, however they have been included in the same
+API.
+|===
+
+[width="100%",cols="18%,82%",options="header",]
+|===
+a|
+=== Edge API: Git
+
+|
+|*Overview* |Developers interact with a
+http://git-scm.com/[[.underline]#Git#] repository hosted by EYK. This
+repository is configured so that when code changes are pushed to it, it
+triggers the build process and makes the result available for
+deployment. This section documents EYK’s use of Git, not the entire Git
+API surface.
+ text_chunk: |*API Pattern* |The Git protocol can use either HTTPS or SSH as an
+underlying transport mechanism. EYK uses SSH.
+
+|*Authentication* |Authentication is provided via SSH keys.
+
+|*Resources and Actions* a|
+* {blank}
++
+____
+Each application has
+https://support.cloud.engineyard.com/hc/en-us/articles/360058941713[[.underline]#exactly
+one#] corresponding Git repository
+____
+* {blank}
++
+____
+Developers push code changes (commits) to the repository
+____
+* {blank}
++
+____
+The repository triggers the
+link:#edge-api-hephy-controller[[.underline]#Controller#] to create a
+new build
+____
+
+|*Metrics* |Metrics are negligible, one invocation from the developer to
+Git and one from Git to
+
+|*References* |http://git-scm.com/book/en/v2[[.underline]#Git Book#]
+
+|*P2 Feedback* |This is a relatively common use of Git, which has been
+used in many products and services. The advantage is that it fits in
+with development teams’ existing tools and processes.
+|===
+ text_chunk: [width="100%",cols="18%,82%",options="header",]
+|===
+a|
+=== Edge API: Logging & Monitoring
+
+|
+|*Overview* |EYK provides logging and monitoring services through
+integrations with popular third party products, namely Kibana and
+Grafana.
+
+|*API Pattern* |HTTP (various).
+
+|*Authentication* |Kibana and Grafana both support multiple
+authentication mechanisms, including OAuth, OpenID, SAML, API keys, etc.
+EYK uses OpenID Connect to support single sign-on with these services.
+
+|*Resources and Actions* |See Kibana and Grafana API documentation
+listed below.
+
+|*Metrics* |N/A. The usage of Kibana and Grafana here is standard, and
+the metrics of their usage is not relevant to EYK.
+
+|*References*
+|https://www.elastic.co/guide/en/kibana/master/api.html[[.underline]#Kibana
+API documentation#];
+https://grafana.com/docs/grafana/latest/http_api/[[.underline]#Grafana
+API documentation#]
+ text_chunk: |*P2 Feedback* |This is a standard usage of Kibana and Grafana,
+embedding them in a resource management user interface to provide
+monitoring of the resources.
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+==== Edge API ITDs
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD EDGE.1 - Use a fork of Hephy to manage applications*
+
+|
+|*THE PROBLEM* |EYK needs to provide a means of controlling the
+applications deployed to the Kubernetes cluster. How will this API be
+provided?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Build our own controller API
+____
+. {blank}
++
+____
+Use Hephy, an open source application management layer for Kubernetes
+____
+. {blank}
++
+____
+*Use a fork of Hephy*
+____
+
+|*REASONING* |Unknown.
+ text_chunk: |*P2 FEEDBACK* a|
+The
+https://github.com/engineyard/hephy-controller/tree/ey-master[[.underline]#EngineYard
+fork of Hephy#] has very limited changes compared to the
+https://github.com/teamhephy/controller[[.underline]#upstream repo#].
+The following is a complete list derived from inspecting a diff between
+the two forks:
+
+* {blank}
++
+____
+OpenID Connect support
+____
+* {blank}
++
+____
+Migration pods (see models/app.py)
+____
+* {blank}
++
+____
+Console roles (see models/app.py)
+____
+* {blank}
++
+____
+Memory and CPU usage limit configuration
+____
+* {blank}
++
+____
+Validation, error handling and retries
+____
+* {blank}
++
+____
+Documentation
+____
+
+From an API perspective, only the first item is relevant.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* No
+ text_chunk: If we are going to use Hephy, we should use the open source repo
+directly instead of forking it and buying a lifetime of technical
+busy-work merging changes from upstream. If we need OIDC support, then
+we should build it and contribute it back to the open source repo.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD EDGE.2 - Use Git to receive updates from developers*
+
+|
+|*THE PROBLEM* |When a developer makes code changes, how will EYK know
+about it?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Use Git*
+____
+. {blank}
++
+____
+Unknown
+____
+
+|*REASONING* |Unknown; however, Git is ubiquitous among developers, and
+supports the required functionality, namely the ability to run a script
+when code changes are received.
+
+|*P2 FEEDBACK* |None.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* Yes
+ text_chunk: Git is the standard type of repo that developers will be pushing code to
+anyway. This can be configured in a number of different ways to
+integrate with existing operational practices (CI/CD, etc).
+
+|===
+
+[width="100%",cols="18%,82%",options="header",]
+|===
+a|
+=== Data Structures Summary
+
+|
+a|
+==== Overview
+
+a|
+EYK is a fork of Hephy, so it benefits from its underlying data model.
+Hephy’s existing data model is used primarily for application
+provisioning workflows. EYK also adds 2 major domains to Hephy, each
+with its own data model:
+
+* {blank}
++
+____
+Harbor Master
+____
+** {blank}
++
+____
+Admin functions for cluster/resource management (e.g., provisioning
+clusters, databases, caches)
+____
+* {blank}
++
+____
+Billing
+____
+** {blank}
++
+____
+Event capture from the underlying Kubernetes clusters, which are
+aggregated for usage metrics reporting.
+____
+ text_chunk: Only the most important entities from Hephy’s data model are mentioned
+below, where they pertain directly to EYK feature functionality, rather
+than simply running Hephy as a black box.
+
+a|
+==== Core Entities
+
+|https://lucid.app/lucidchart/1f6bfacf-8f00-4033-b938-32f8a7447cd6/edit?referringApp=google+drive&beaconFlowId=8f57885ac5db090f&page=0_0#[image:media/image2.png[media/image2,width=499,height=679]]
+
+a|
+==== CUD Operations
+
+a|
+*Harbor Master*:
+
+* {blank}
++
+____
+Create/delete a cluster for an Organization.
+____
+* {blank}
++
+____
+Create/delete an RDS database instance on a given cluster.
+____
+* {blank}
++
+____
+Create/delete an Elasticache Redis instance on a given cluster.
+____
+* {blank}
++
+____
+Create/delete S3 buckets on a given cluster.
+____
+* {blank}
++
+____
+Create/delete Machines on a given cluster.
+____
+
+*Billing*:
+ text_chunk: * {blank}
++
+____
+Create a Pod Event. Handled by a Billing Agent running on each cluster,
+essentially creating a Pod Event per Kubernetes event on the underlying
+cluster.
+____
+
+*Hephy*:
+
+* {blank}
++
+____
+Create/Delete an App
+____
+* {blank}
++
+____
+Create/Delete App Configuration values
+____
+* {blank}
++
+____
+Create/Delete a Build
+____
+* {blank}
++
+____
+Create/Delete a Release
+____
+* {blank}
++
+____
+Create/Delete a Domain
+____
+* {blank}
++
+____
+Create/Delete a Certificate
+____
+
+a|
+==== Query Patterns
+
+a|
+*Harbor Master*:
+
+* {blank}
++
+____
+List and Retrieve operations on all models (e.g., Organization, Cluster,
+Bucket, RDB, Cache, Machine).
+____
+
+*Billing*:
+
+* {blank}
++
+____
+Retrieve a list of Clusters.
+____
+* {blank}
++
+____
+Retrieve Pod Events individually or in aggregated format called OCU
+(Optimized Container Unit) Usage.
+____
+
+*Hephy*:
+ text_chunk: * {blank}
++
+____
+List and retrieve Apps
+____
+* {blank}
++
+____
+List and retrieve App Configuration values
+____
+* {blank}
++
+____
+List and retrieve Builds
+____
+* {blank}
++
+____
+List and retrieve Releases
+____
+* {blank}
++
+____
+List and retrieve Domains
+____
+* {blank}
++
+____
+List and retrieve Certificates
+____
+
+a|
+==== Persistence
+
+|Data for each domain depicted above (Harbor Master, Billing, and Hephy)
+is stored in a separate Postgres database on AWS RDS.
+
+a|
+==== Metrics
+
+a|
+* {blank}
++
+____
+Harbor Master and Hephy data models are used for admin functions (e.g.,
+configuration, cluster management, reporting), with infrequent and
+minimal traffic.
+____
+* {blank}
++
+____
+A billing event is created in the Pod Event table for every Kubernetes
+event on each cluster. Therefore, Pod Events will scale up as more
+clusters are created. Also, clusters that are overallocated or
+frequently throwing errors will generate more events than the average
+cluster.
+____
+
+|===
+ text_chunk: [width="100%",cols="100%",options="header",]
+|===
+a|
+=== Topic: Cluster Management
+
+a|
+==== Background
+
+Almost all of the important decisions for EYK revolve around how it uses
+Kubernetes, how the clusters and services/applications are managed by
+the platform, and issues around resource management.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+==== Important Decisions
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.1 - Use Hephy as the foundation of the PaaS*
+
+|
+|*THE PROBLEM* |What should be used as the foundation of the EYK PaaS?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Use https://dokku.com/[[.underline]#Dokku#] as the foundation of the
+PaaS
+____
+. {blank}
++
+____
+*Use Hephy as the foundation of the PaaS*
+____
+ text_chunk: |*REASONING* a|
+One of the guiding business mandates was that EYK should be competitive
+with offerings from Heroku. The primary criteria for this decision was
+support for the “git push” deployment model, and tooling for easily
+building the K8S cluster that provides the compute resources.
+
+Hephy was chosen over Dokku for several reasons:
+
+[arabic]
+. {blank}
++
+____
+Hephy is derived from Deis, which was developed extensively by Engine
+Yard, prior to acquisition by ESW. Because of this, EY had meaningful
+context and experience with the architecture.
+____
+. {blank}
++
+____
+Hephy was considered to be more full-featured and mature than Dokku.
+____
+. {blank}
++
+____
+Hephy had a larger and more active developer community.
+____
+ text_chunk: |*P2 FEEDBACK* a|
+Since this decision was made, https://porter.run/[[.underline]#Porter#]
+has been released, and appears to be a viable alternative. This
+tool/framework is not based on Hephy/Deis, and appears to have been
+written from scratch over the course of the last 12-18 months. The
+project was part of the Y Combinator Summer 2020 batch.
+
+We should do a Tech Teardown on Porter, with the goal of evaluating its
+applicability as a replacement for Hephy, and whether making the switch
+would be a significant simplification for EYK.
+
+It’s also worth noting that the “git push” build model
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+I would use Porter, if a TT shows that it is a better alternative.
+Failing that, I would build a custom minimal cluster/app management
+layer, interacting directly with EKS, and leveraging the open-source
+buildpacks from Heroku.
+
+|===
+ text_chunk: [width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.2 - Use Amazon EKS for managed Kubernetes clusters*
+
+|
+|*THE PROBLEM* |How should Kubernetes clusters be created by EYK?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Create self-managed Kubernetes clusters on EC2 resources
+____
+. {blank}
++
+____
+*Use Amazon EKS for managed Kubernetes clusters*
+____
+
+|*REASONING* a|
+Option 1 was attempted and rejected by Engine Yard in the past
+(pre-acquisition) because of the complexity of self-managing the
+Kubernetes cluster. At the time, there were no managed offerings for
+Kubernetes.
+
+Amazon EKS manages the Kubernetes control plane, makes it simple to
+provision additional compute resources when the cluster needs to
+horizontally scale, and provides tools and APIs for managing the
+clusters.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* Y
+ text_chunk: Using Amazon EKS simplifies the overall solution, and lowers the
+operational burden of running EYK.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.3 - Use EKS-managed EC2 compute nodes*
+
+|
+|*THE PROBLEM* |How should compute nodes be provisioned for EKS?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Use Fargate for compute
+____
+. {blank}
++
+____
+Use self-managed EC2 compute nodes
+____
+. {blank}
++
+____
+*Use EKS-managed EC2 compute nodes*
+____
+
+|*REASONING* |Reasoning unknown
+
+|*P2 FEEDBACK* a|
+As a rule of thumb, self-managed EC2 compute nodes are only advantageous
+if you require support for Windows containers, AWS Outposts, AWS Local
+Zones. EYK does not require these things, making EKS-managed EC2 compute
+nodes a better choice, as EKS provides a simpler maintenance pattern for
+upgrading nodes to new versions of Kubernetes.
+ text_chunk: Using Fargate for compute would simplify operations by eliminating all
+node/instance management tasks. Because Fargate is serverless, there are
+no nodes to maintain. Kubernetes and OS versions are automatically kept
+up-to-date, and pods are more isolated from each other (each has its own
+kernel).
+
+Some important limitations of EKS on Fargate:
+
+* {blank}
++
+____
+No Spot instance pricing
+____
+
+* {blank}
++
+____
+Not all EKS regions supported
+____
+* {blank}
++
+____
+No ARM, GPU or Inferentia support
+____
+* {blank}
++
+____
+No EBS support
+____
+* {blank}
++
+____
+Daemonsets not supported (must use sidecars)
+____
+* {blank}
++
+____
+Resource (CPU & mem) granularity is more coarse
+____
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+I would simplify by choosing Fargate.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.4 - Use m5.large EC2 instances for cluster nodes*
+ text_chunk: |
+|*THE PROBLEM* |What size compute nodes should be used when provisioning
+a cluster?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Use m5.large EC2 instances for cluster nodes*
+____
+. {blank}
++
+____
+No other options considered
+____
+
+|*REASONING* a|
+This node size was chosen because it’s the most common EC2 instance size
+used by customers of Engine Yard Cloud. Anecdotally, the SME stated that
+this size has worked out well for customers, and provides enough “room”
+on the initial/default cluster for most customer’s application loads.
+
+We can probably move to smaller nodes if we eliminate most of the
+infrastructure pods by using managed services.
+
+|*P2 FEEDBACK* a|
+The SME mentioned that particularly heavy applications are sometimes
+incapable of starting on this size node. In these cases, EYK support
+intervenes, and upgrades the node instance type to something larger.
+ text_chunk: While this is a good simplifying decision, there may be an opportunity
+for cost-savings by allowing the node type to vary depending on factors
+such as customer type (trial vs paid) and total workload (OCUs and
+horizontal scaling).
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+While using a single node size is a simplifying choice, I would instead
+use Fargate.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.5 - Use Terraform for IAC*
+
+|
+|*THE PROBLEM* |Creating a new cluster requires provisioning a number of
+AWS resources. How should these resources be created?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Use CloudFormation for IAC
+____
+. {blank}
++
+____
+*Use Terraform for IAC*
+____
+
+|*REASONING* |Terraform was chosen as a “future proofing” in case the
+business ever required that the product support multiple cloud
+providers.
+ text_chunk: |*P2 FEEDBACK* a|
+While Terraform is a reasonable choice for IAC, the reasoning is flawed,
+as multi-cloud support has never been a goal for EYK.
+
+It’s worth noting that the Tech Teardown on EngineYard Cloud that was
+completed in mid 2019 also recommended using CloudFormation.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+I would use the AWS CDK and CloudFormation, falling back to a small
+amount of custom logic as necessary for any resources not supported via
+IAC.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.6 - Use “dummy pods” to improve application scaling time*
+
+|
+|*THE PROBLEM* |Application auto-scaling was found to be slower than
+desired. How should EYK improve scaling responsiveness?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Use “dummy pods” to improve application scaling time*
+____
+. {blank}
++
+____
+Other options considered unknown
+____
+ text_chunk: |*REASONING* a|
+The “dummy pods” solution is nothing more than a set of replicated pods
+that reserve a portion of CPU and memory (10% of each compute node).
+During application auto-scaling, if the cluster does not have sufficient
+capacity to scale, the dummy pods are terminated, and additional
+instances of the customer’s application pods are launched.
+
+In parallel, the cluster itself is scaled by provisioning additional
+compute nodes. Once the additional compute is online (typically 3-5
+minutes), a new set of “dummy pods” are launched on the cluster to
+reestablish headroom for further scaling.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+While this is a creative, simple, and effective solution to the problem,
+I would simplify by using Fargate.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD CLUSTER.7 - Assign new customers an AWS account from a pre-allocated pool of accounts*
+ text_chunk: |
+|*THE PROBLEM* |Every customer gets their own AWS account, into which
+one or more Kubernetes clusters are provisioned. How should these AWS
+accounts be allocated?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Assign new customers an AWS account from a pre-allocated pool of
+accounts*
+____
+. {blank}
++
+____
+No other options considered
+____
+
+|*REASONING* |The pool of AWS accounts is owned and managed by the EYC
+core. EYK simply continued to use this system for providing AWS accounts
+for EYK customers.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+I would allocate new AWS accounts dynamically, as needed, via the
+Central AWS Organization.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+==== Important Facts
+
+Describe the important things that a reader needs to understand
+ text_chunk: |
+|*IF CLUSTER.1* |Hephy (and therefore EYK) use only the Horizontal Pod
+Autoscaler. For customers with extremely large apps, vertical scaling
+(to larger cluster node sizes) is performed manually by EYK support.
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Topic: Application Management
+
+a|
+==== Background
+
+Once the user has deployed their application to their cluster, via “git
+push”, EYK allows them to manage their application using the EYK Web UI
+and the eyk cli tool.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+==== Important Decisions
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD APP.1 - Abstract request/limit by defining Optimized Container Units (OCUs)*
+
+|
+|*THE PROBLEM* |How should EYK customers express the resource needs of
+their applications?
+ text_chunk: |*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Use the Kubernetes-native concept of request/limit for CPU & Memory
+____
+. {blank}
++
+____
+*Abstract request/limit by defining Optimized Container Units (OCUs)*
+____
+
+|*REASONING* a|
+Optimized Container Units are simpler for the customer. They set a
+single number for their applications. Each integer increment of OCU
+allocates 1/10th of a CPU core and 1GB of memory. The customer doesn’t
+need to understand the request/limit mechanism, nor do they need to
+attempt to balance CPU and memory thresholds.
+
+OCUs also make the billing model simpler. Their bill is the cost of the
+cluster itself, plus the total number of OCU-hours consumed by all of
+the applications running on their cluster over the course of the month.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* Y
+ text_chunk: This is a nice simplification, avoiding the need for customers to
+understand the resource allocation model of Kubernetes.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD APP.2 - Provide a console access command in the eyk CLI tool*
+
+|
+|*THE PROBLEM* |It is sometimes necessary to access the runtime
+environment of an application for debugging and diagnostic purposes. How
+can EYK enable this?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Have the customer use kubectl to get a shell inside a container
+____
+. {blank}
++
+____
+*Provide a console access command in the eyk CLI tool*
+____
+
+|*REASONING* a|
+Option 1 was rejected because of complexities in authentication, and to
+avoid needing the customer to understand anything about how K8s works.
+
+By building the command into the eyk CLI tool, the same SSO login
+mechanism could be used, and the user doesn’t need to become familiar
+with anything other than the eyk CLI.
+ text_chunk: |*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* Y
+
+This is a good decision as it simplifies the experience for the EYK
+customer.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Core Function: Build
+
+a|
+==== Background
+
+From an app developer’s perspective, they do a git push and their
+application is deployed. This process happens as many times as they do
+a:
+
+____
+git push eyk master
+____
+
+Internally, Hephy discovers the language of the repository using a
+parsing technology called buildpacks. It then establishes parameters for
+containerization using either developer supplied values in a proc file
+or the language defaults, and builds a docker image. The docker image is
+pushed to a Hephy internal docker registry (with S3 as the backing
+store), and runs the container in the user’s cluster.
+ text_chunk: All of this functionality is provided by the open-source Hephy/DEIS
+platform, and is out-of-scope for this teardown, but is presented here
+for context.
+
+image:media/image1.png[media/image1,width=610,height=140]
+
+(https://github.com/teamhephy/workflow/blob/master/src/diagrams/Git_Push_Flow.png[[.underline]#Diagram
+Source#])
+
+The internals of Hephy, which does most of the heavy lifting, are not
+covered in this spec. We cover the EYK specific modifications to the
+Hephy/DEIS code.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+==== Important Facts
+
+Describe the important things that a reader needs to understand
+ text_chunk: |
+|*IF BUILD.1* |Hephy provides buildpacks that auto-discover app language
+and deployment defaults, and build appropriate docker containers. Hephy
+supports
+https://docs.teamhephy.com/applications/using-buildpacks/#included-buildpacks[[.underline]#buildpacks#]
+for Java, Node.js, python, ruby, and others. Built containers are pushed
+to an internal
+https://github.com/teamhephy/docker-registry[[.underline]#docker
+registry#], from which they are deployed to Kubernetes.
+
+|*IF BUILD.2* |Hephy maintains an internal git repository. It only keeps
+the master branch and only the latest revision. A git hook triggers the
+building of docker containers.
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+==== Important Decisions
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD BUILD.1 - Deploy dedicated pods into every cluster for building customer apps*
+ text_chunk: |
+|*THE PROBLEM* |One of the key features of EYK is the “git push” model
+of deployment. How should EYK implement the build process?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Deploy dedicated pods into every cluster for building customer apps*
+____
+. {blank}
++
+____
+No other options considered
+____
+
+|*REASONING* |This is the standard pattern for application builds from
+Hephy.
+
+|*P2 FEEDBACK* |It seems wasteful to consume cluster resources for
+something that only runs on-demand. Using a serverless compute task via
+Fargate would provide more headroom for customer applications in the
+cluster.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+I would implement customer app builds as an ephemeral ECS Fargate task.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Core Function: Test
+
+a|
+==== Background
+ text_chunk: EYK provides no specific functionality for aiding customers in testing
+their applications, beyond the logging and monitoring tools covered in
+the Monitoring section below.
+
+|===
+
+No ITDs or IFs
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Core Function: Deploy
+
+a|
+==== Background
+
+Deployment is handled exclusively through EYK’s build system, and is
+invoked via “git push eyk master”
+
+|===
+
+No ITDs or IFs
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Core Function: Monitor
+
+a|
+==== Background
+
+EYK provides extensive support for log aggregation, health and resource
+consumption monitoring, alerting, etc.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+==== Important Decisions
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD MONITOR.1 - Deploy the ELK stack in the customer’s cluster*
+
+|
+|*THE PROBLEM* |How should EYK gather and provide access to logs from
+the user’s applications?
+ text_chunk: |*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Deploy the ELK stack in the customer’s cluster*
+____
+. {blank}
++
+____
+No other options were considered
+____
+
+|*REASONING* |The ELK stack is the canonical solution for log
+aggregation in the K8s world - nothing else was seriously considered.
+
+|*P2 FEEDBACK* |Cluster overhead was identified by the SME as one the
+biggest concerns with EYK. Moving to a managed solution for log
+aggregation and display would remove a significant portion of the
+cluster overhead.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+
+I would use AWS OpenSearch, as it is a managed service, and would
+simplify operations and reduce the overhead on the customer’s cluster.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD MONITOR.2 - Use Fluent Bit for log collection*
+ text_chunk: |
+|*THE PROBLEM* |How should the logs be collected from each container
+instance, and delivered to ElasticSearch?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+Use LogStash for log collection
+____
+. {blank}
++
+____
+Use FluentD for log collection
+____
+. {blank}
++
+____
+*Use Fluent Bit for log collection*
+____
+
+|*REASONING* |Fluent Bit was chosen over LogStash and FluentD because it
+has far lower resource consumption than the alternatives (less than 1MB
+of memory for Fluent Bit, vs 10’s to 100’s of MB for FluentD and
+LogStash).
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* Y
+
+Fluent Bit has all the necessary functionality and far lower resource
+consumption than the alternatives.
+
+|===
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+===== *ITD MONITOR.3 - Deploy Prometheus, Thanos & Grafana in the customer’s cluster*
+ text_chunk: |
+|*THE PROBLEM* |How should EYK gather and present key metrics from the
+cluster and from apps deployed into the cluster?
+
+|*OPTIONS CONSIDERED +
+(Decision in bold)* a|
+[arabic]
+. {blank}
++
+____
+*Deploy Prometheus, Thanos & Grafana in the customer’s cluster*
+____
+. {blank}
++
+____
+No other options were considered
+____
+
+|*REASONING* |This is the canonical solution for metrics gathering and
+display in Kubernetes. No other options were seriously considered.
+
+|*P2 FEEDBACK* a|
+Cluster overhead was identified by the SME as one the biggest concerns
+with EYK. Moving to a managed solution for metrics gathering and
+presentation would remove a significant portion of the cluster overhead.
+
+Amazon Managed Service for Grafana was announced as General Availability
+on September 1, 2021. Amazon Managed Service for Prometheus is currently
+in Preview, but we expect it to go GA soon.
+
+|*REBUILD ASSESSMENT* a|
+*_Would you make this decision if you were building the product from
+scratch now?_* N
+ text_chunk: I would use Amazon’s managed offerings for Prometheus and Grafana,
+simplifying operations and reducing the overhead on the customer’s
+cluster.
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Core Function: Fix
+
+a|
+==== Background
+
+EYK provides nothing specific to aid customers in fixing their
+applications. Once the user has identified and fixed a problem, they
+simply build and deploy as always, via “git push eyk master”
+
+|===
+
+No ITDs or IFs
+
+== 
+
+==  +
+Recommendations
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Improvement Plan
+
+What series of steps do you recommend are done to address concerns in
+this teardown?
+
+|
+
+|
+|===
+
+[width="100%",cols="28%,22%,23%,27%",options="header",]
+|===
+a|
+=== Risks
+
+| | |
+|*Risk description* |*Likelihood of occurring* |*Impact if it occurs*
+|*Recommended remediation(s)*
+
+|Cluster creation slow |Certain |Customer attrition or failure to adopt
+a|
+link:++#ip-1---abandon-hephy++[[.underline]#Abandon Hephy#]
+ text_chunk: link:++#ip-2---use-cloudformation++[[.underline]#Use CloudFormation#]
+
+link:++#ip-3---use-managed-services++[[.underline]#Use Managed
+Services#]
+
+|Compute capacity waste |High |Customer attrition or failure to adopt a|
+link:++#ip-4---use-fargate++[[.underline]#Use Fargate#]
+
+link:++#ip-5---new-build-system++[[.underline]#New Build System#]
+
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+==== IP 1 - Abandon Hephy
+
+|
+a|
+*SUGGESTION*
+
+_What is the suggestion?_
+
+|Abandon Hephy
+
+a|
+*MEASURABLE BENEFITS*
+
+_What are the most important benefits and how will they be measured?_
+
+a|
+* {blank}
++
+____
+Simpler codebase (LOC)
+____
+* {blank}
++
+____
+Faster cluster provisioning
+____
+* {blank}
++
+____
+Less infrastructure dependencies
+____
+
+a|
+*FACTS NEEDED*
+
+_What facts are necessary to confirm the benefit and the approach?_
+ text_chunk: a|
+* {blank}
++
+____
+Applicability of Porter (do a TT)
+____
+** {blank}
++
+____
+If not appropriate, a custom cluster/app management layer would need to
+be designed.
+____
+* {blank}
++
+____
+Repos that could be eliminated
+____
+* {blank}
++
+____
+LOC that could be eliminated
+____
+
+a|
+*IMPLEMENTATION INSIGHTS*
+
+_What important insights can you give to the engineer who implements
+this suggestion?_
+
+|This work should be guided by a Rebuild spec, as it is likely to have a
+wide impact.
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+==== IP 2 - Use CloudFormation
+
+|
+a|
+*SUGGESTION*
+
+_What is the suggestion?_
+
+|Abandon Terraform in favor of CloudFormation
+
+a|
+*MEASURABLE BENEFITS*
+
+_What are the most important benefits and how will they be measured?_
+
+a|
+* {blank}
++
+____
+Reduction in the complexity of the IAC codebase
+____
+* {blank}
++
+____
+Central Engineering is more familiar with CloudFormation
+____
+
+a|
+*FACTS NEEDED*
+
+_What facts are necessary to confirm the benefit and the approach?_
+ text_chunk: a|
+* {blank}
++
+____
+What things are being done with Terraform that are not directly
+supported by CloudFormation?
+____
+* {blank}
++
+____
+How much code could be eliminated?
+____
+
+a|
+*IMPLEMENTATION INSIGHTS*
+
+_What important insights can you give to the engineer who implements
+this suggestion?_
+
+|None
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+==== IP 3 - Use Managed Services
+
+|
+a|
+*SUGGESTION*
+
+_What is the suggestion?_
+
+a|
+Switch from cluster-deployed pods to managed services wherever possible
+
+* {blank}
++
+____
+ELK Stack => AWS OpenSearch (ES & Kibana)
+____
+* {blank}
++
+____
+Prometheus & Thanos => AWS Managed Prometheus
+____
+* {blank}
++
+____
+Grafana => AWS Managed Grafana
+____
+
+a|
+*MEASURABLE BENEFITS*
+
+_What are the most important benefits and how will they be measured?_
+
+a|
+* {blank}
++
+____
+Lower cluster resource consumption
+____
+* {blank}
++
+____
+Faster cluster creation
+____
+* {blank}
++
+____
+Fully managed solution
+____
+
+a|
+*FACTS NEEDED*
+ text_chunk: _What facts are necessary to confirm the benefit and the approach?_
+
+|None
+
+a|
+*IMPLEMENTATION INSIGHTS*
+
+_What important insights can you give to the engineer who implements
+this suggestion?_
+
+|None
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+==== IP 4 - Use Fargate
+
+|
+a|
+*SUGGESTION*
+
+_What is the suggestion?_
+
+|Switch from cluster-deployed ELK stack to OpenSearch
+
+a|
+*MEASURABLE BENEFITS*
+
+_What are the most important benefits and how will they be measured?_
+
+a|
+* {blank}
++
+____
+Fully managed compute (no servers)
+____
+* {blank}
++
+____
+Eliminate overprovisioning of compute resources
+____
+* {blank}
++
+____
+Lower cost-of-entry for new EYK customers
+____
+* {blank}
++
+____
+Faster cluster creation
+____
+
+a|
+*FACTS NEEDED*
+
+_What facts are necessary to confirm the benefit and the approach?_
+
+a|
+* {blank}
++
+____
+If we are keeping Hephy, does anything need to be done to support
+Fargate?
+____
+
+a|
+*IMPLEMENTATION INSIGHTS*
+ text_chunk: _What important insights can you give to the engineer who implements
+this suggestion?_
+
+|None
+|===
+
+[width="100%",cols="31%,69%",options="header",]
+|===
+a|
+==== IP 5 - New Build System
+
+|
+a|
+*SUGGESTION*
+
+_What is the suggestion?_
+
+|Eliminate the build-system pod(s) that are deployed on every cluster,
+replacing them with an ephemeral ECS Fargate Spot task.
+
+a|
+*MEASURABLE BENEFITS*
+
+_What are the most important benefits and how will they be measured?_
+
+a|
+* {blank}
++
+____
+Lower cluster resource consumption
+____
+* {blank}
++
+____
+Faster cluster creation
+____
+
+a|
+*FACTS NEEDED*
+
+_What facts are necessary to confirm the benefit and the approach?_
+
+|None
+
+a|
+*IMPLEMENTATION INSIGHTS*
+
+_What important insights can you give to the engineer who implements
+this suggestion?_
+
+|None
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== What was left out of this spec?
+ text_chunk: a|
+* {blank}
++
+____
+The usage of EYC components by EYK was not deeply analyzed.
+____
+* {blank}
++
+____
+Load balancing and routing concerns and solutions.
+____
+* {blank}
++
+____
+Challenges with cluster upgrades due to OS and K8S patching.
+____
+* {blank}
++
+____
+Cross-cluster communication (each cluster is in its own VPC)
+____
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Curious Questions for the reader
+
+a|
+* {blank}
++
+____
+How hard would it be to separate EYK from EYC, as EYC is sunsetted?
+____
+* {blank}
++
+____
+Can direct interaction with EKS (via eksctl, AWS CLI, EKS APIs) replace
+some of Hephy? Possibly all of it?
+____
+* {blank}
++
+____
+Would switching from Hephy to Porter simplify the product? How?
+____
+* {blank}
++
+____
+What would be required to support ARM clusters?
+____
+
+|===
+
+[width="100%",cols="100%",options="header",]
+|===
+a|
+=== Other Follow-up Recommendations
+ text_chunk: a|
+* {blank}
++
+____
+Do a TT on https://porter.run/[[.underline]#Porter#]
+____
+** {blank}
++
+____
+Alternative to Hephy, more modern and appears much simpler
+____
+* {blank}
++
+____
+Do a TT on https://loft.sh/[[.underline]#Loft.sh#]
+____
+** {blank}
++
+____
+Brings multi-tenancy to K8S, could be a great way to reduce
+infrastructure overhead for smaller EYK customers, albeit with reduced
+isolation guarantees (no dedicated AWS account, no dedicated cluster)
+____
+** {blank}
++
+____
+Would allow for a single cluster to be shared by multiple customers,
+ideal for many existing EYC customers.
+____
+** {blank}
++
+____
+Would also address cluster provisioning time
+____
+* {blank}
++
+____
+Do a 5K Rebuild spec on EYK
+____
+** {blank}
++
+____
+How simple can we make things?
+____
+** {blank}
++
+____
+Build entirely separate from EYC
+____
+** {blank}
++
+____
+Use Porter? (post TT)
+____
+** {blank}
++
+____
+Use EKS directly?
+____
+** {blank}
++
+____
+Possibility: Simplify by eliminating the cluster concept, focus instead
+on serverless containerization made dead simple.
+____
+ text_chunk: |===
+
+== Additional Analysis
+
+=== Software Component Analysis & Recommendation
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+=== Software Modules Overview
+
+Key facts about the product codebase
+
+|
+|*SOFTWARE STACK* |
+|Languages a|
+[width="99%",cols="21%,25%,54%",options="header",]
+!===
+!*Language* !*Estimated lines of code* !*Where Used*
+!Ruby !270K !EYK Platform (Excluding Hephy)
+!Javascript !60k !All UIs
+!Python !14K !Reporting & batch processing
+!===
+
+|Important Frameworks and Libraries a|
+[width="99%",cols="23%,54%,23%",options="header",]
+!===
+!*Name* !*Where Used* !*Open Source or Commercial*
+!ReactJS !All UIs !Open Source
+!Hephy !Kubernetes management !Open Source
+!ELK stack !Centralized logging !Open Source
+!Elasticache !Caching !Open Source
+!Prometheus !Monitoring !Open Source
+!Grafana !Monitoring !Open Source
+!===
+
+|===
+
+=== Deployment
+
+[width="100%",cols="16%,84%",options="header",]
+|===
+a|
+=== Deployment Stack Report
+ text_chunk: What are the main technologies used in the product?
+
+|
+|OS, Hardware, Hosting a|
+[width="100%",cols="20%,15%,13%,13%,19%,20%",options="header",]
+!===
+!*Parts of system* !*OS* !*Hosting* !*Location* !*Approx #hosts*
+!*Special Hardware*
+!All !Amazon Linux !EKS !AWS !3+ (Variable based on customers) !None
+!===
+
+|===
+
+== Appendices
+
+=== Reference material
+
+https://www.mobilise.cloud/aws-elastic-kubernetes-service-eks-ec2-vs-fargate/[[.underline]#AWS
+Elastic Kubernetes Service (EKS): EC2 vs Fargate#]
+
+https://docs.teamhephy.com/understanding-workflow/concepts/[[.underline]#Hephy/DEIS
+Concepts#] +
+https://docs.aws.amazon.com/eks/latest/userguide/eks-compute.html[[.underline]#Amazon
+EKS nodes#]
+ text_chunk: * {blank}
++
+____
+https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html[[.underline]#Managed
+Node Groups#]
+____
+* {blank}
++
+____
+https://docs.aws.amazon.com/eks/latest/userguide/worker.html[[.underline]#Self-Managed
+Nodes#]
+____
+* {blank}
++
+____
+https://docs.aws.amazon.com/eks/latest/userguide/fargate.html[[.underline]#Fargate#]
+____

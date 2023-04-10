@@ -32,7 +32,7 @@ def get_text_chunks(text: str, chunk_token_size: Optional[int]) -> List[str]:
         A list of text chunks, each of which is a string of ~CHUNK_SIZE tokens.
     """
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200, separator=["", "\n\n", "\n", " ", ""])
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
     chunks = text_splitter.split_text(text)
     return chunks
 
